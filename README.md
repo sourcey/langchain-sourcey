@@ -4,17 +4,15 @@
 [![PyPI - License](https://img.shields.io/pypi/l/langchain-sourcey)](https://pypi.org/project/langchain-sourcey/)
 [![CI](https://github.com/sourcey/langchain-sourcey/actions/workflows/ci.yml/badge.svg)](https://github.com/sourcey/langchain-sourcey/actions/workflows/ci.yml)
 
-> Your docs retriever should not depend on somebody else's SaaS either.
+`langchain-sourcey` retrieves from a published Sourcey docs site.
 
-`langchain-sourcey` reads a published Sourcey docs site directly.
-
-Sourcey already ships the files a retriever needs. This package uses them:
+Sourcey already emits the files a retriever needs:
 
 - `search-index.json` for candidate discovery
 - `llms-full.txt` for full-page hydration
 - canonical page URLs for citations
 
-If `llms-full.txt` is missing, it falls back to the matched page HTML.
+No hosted index is required. Point `site_url` at the docs root and use it.
 
 ## Install
 
@@ -49,11 +47,11 @@ for doc in docs:
 
 For a runnable script, see [examples/live_quickstart.py](examples/live_quickstart.py).
 
-Sourcey guide: `https://sourcey.com/docs/guides/guide-langchain-retriever.html`
+More context: `https://sourcey.com/docs/guides/guide-langchain-retriever`
 
 ## Use In A LangChain Chain
 
-Install a chat model integration of your choice. This example uses OpenAI:
+Install a chat model package. This example uses OpenAI:
 
 ```bash
 pip install -U langchain-openai
@@ -90,16 +88,18 @@ print(answer)
 
 For a fuller example, see [examples/rag_chain.py](examples/rag_chain.py).
 
-## Sourcey Contract
+## What Has To Exist
 
-This package assumes the published Sourcey site exposes:
+For clean retrieval, the published Sourcey site should expose:
 
 - publish `search-index.json`
 - publish `llms-full.txt`
 - set `siteUrl` in `sourcey.config.ts` so citations are canonical
 
-`search-index.json` is required. `llms-full.txt` is strongly recommended because
-it gives the retriever full page content instead of HTML-derived fallback text.
+`search-index.json` is required.
+
+`llms-full.txt` is strongly recommended. If it is missing, the retriever falls
+back to the matched page HTML.
 
 ## Returned Metadata
 
@@ -134,6 +134,14 @@ This repo includes draft docs ready to turn into a LangChain docs PR:
 
 - [docs/langchain/provider-sourcey.mdx](docs/langchain/provider-sourcey.mdx)
 - [docs/langchain/retriever-sourcey.mdx](docs/langchain/retriever-sourcey.mdx)
+
+## JavaScript Package
+
+This repo also contains the JavaScript package in [js](js).
+
+- npm package: `langchain-sourcey`
+- draft JS docs: [docs/langchain-js/provider-sourcey.mdx](docs/langchain-js/provider-sourcey.mdx)
+- draft JS docs: [docs/langchain-js/retriever-sourcey.mdx](docs/langchain-js/retriever-sourcey.mdx)
 
 ## Scope
 
