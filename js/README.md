@@ -1,6 +1,8 @@
 # langchain-sourcey
 
-`langchain-sourcey` retrieves from a published Sourcey docs site.
+Build your own Ask AI on top of a published Sourcey docs site.
+
+`langchain-sourcey` is the retrieval layer behind that feature.
 
 Sourcey already emits the files a retriever needs:
 
@@ -54,7 +56,7 @@ For a runnable script, see [examples/live-quickstart.ts](examples/live-quickstar
 
 More context: `https://sourcey.com/docs/guides/guide-langchain-retriever`
 
-## Use In A LangChain Chain
+## Implement Ask AI
 
 Install a chat model package. This example uses OpenAI:
 

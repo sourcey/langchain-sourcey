@@ -177,7 +177,7 @@ export class SourceyRetriever extends BaseRetriever<SourceyDocumentMetadata> {
     this.topK = fields.topK ?? 6;
     this.timeoutMs = fields.timeoutMs ?? 10_000;
     this.useLlmsFull = fields.useLlmsFull ?? true;
-    this.userAgent = fields.userAgent ?? "langchain-sourcey-js/0.1.0";
+    this.userAgent = fields.userAgent ?? "langchain-sourcey-js/0.1.1";
     this.headers = fields.headers ?? {};
     this.fetchImpl = fields.fetch ?? globalThis.fetch;
 

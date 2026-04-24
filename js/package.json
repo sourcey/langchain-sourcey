@@ -1,7 +1,7 @@
 {
   "name": "langchain-sourcey",
-  "version": "0.1.0",
-  "description": "LangChain retriever for published Sourcey docs sites.",
+  "version": "0.1.1",
+  "description": "LangChain retriever for Ask AI over published Sourcey docs sites.",
   "type": "module",
   "license": "AGPL-3.0-or-later",
   "author": "Kam Low",

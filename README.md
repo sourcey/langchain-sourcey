@@ -4,7 +4,9 @@
 [![PyPI - License](https://img.shields.io/pypi/l/langchain-sourcey)](https://pypi.org/project/langchain-sourcey/)
 [![CI](https://github.com/sourcey/langchain-sourcey/actions/workflows/ci.yml/badge.svg)](https://github.com/sourcey/langchain-sourcey/actions/workflows/ci.yml)
 
-`langchain-sourcey` retrieves from a published Sourcey docs site.
+Build your own Ask AI on top of a published Sourcey docs site.
+
+`langchain-sourcey` is the retrieval layer behind that feature.
 
 Sourcey already emits the files a retriever needs:
 
@@ -49,7 +51,7 @@ For a runnable script, see [examples/live_quickstart.py](examples/live_quickstar
 
 More context: `https://sourcey.com/docs/guides/guide-langchain-retriever`
 
-## Use In A LangChain Chain
+## Implement Ask AI
 
 Install a chat model package. This example uses OpenAI:
 
