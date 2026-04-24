@@ -37,13 +37,44 @@ Returns indexed results.
     const pages = parseLlmsFullText(payload);
 
     expect(Object.keys(pages).sort()).toEqual([
-      "api/index.html",
-      "guides/search.html",
+      "api",
+      "guides/search",
     ]);
-    expect(pages["guides/search.html"]?.content).toContain(
+    expect(pages["guides/search"]?.content).toContain(
       "This heading belongs to the page content"
     );
-    expect(pages["api/index.html"]?.title).toBe("API Reference");
+    expect(pages["api"]?.title).toBe("API Reference");
+  });
+
+  it("canonicalises path forms so pretty-URL builds match .html builds", () => {
+    const htmlPayload = `
+### Search
+
+Path: \`guides/search.html\`
+
+body one
+`.trim();
+
+    const slashPayload = `
+### Search
+
+Path: \`/guides/search/\`
+
+body two
+`.trim();
+
+    const stripPayload = `
+### Search
+
+Path: \`/guides/search\`
+
+body three
+`.trim();
+
+    for (const payload of [htmlPayload, slashPayload, stripPayload]) {
+      const pages = parseLlmsFullText(payload);
+      expect(Object.keys(pages)).toEqual(["guides/search"]);
+    }
   });
 });
 
@@ -93,10 +124,45 @@ describe("rankSearchEntries", () => {
     );
 
     expect(ranked).toHaveLength(1);
-    expect(ranked[0]?.outputPath).toBe("search.html");
+    expect(ranked[0]?.outputPath).toBe("search");
     expect(ranked[0]?.sourceUrl).toBe(
       "https://docs.example.com/reference/search.html"
     );
+  });
+
+  it("deduplicates across .html, slash, and strip URL styles", () => {
+    const entries: SearchEntry[] = [
+      {
+        title: "Search",
+        content: "One variant.",
+        url: "/search.html",
+        tab: "Docs",
+        category: "Pages",
+      },
+      {
+        title: "Search",
+        content: "Trailing slash variant.",
+        url: "/search/",
+        tab: "Docs",
+        category: "Pages",
+      },
+      {
+        title: "Search",
+        content: "Extensionless variant.",
+        url: "/search",
+        tab: "Docs",
+        category: "Pages",
+      },
+    ];
+
+    const ranked = rankSearchEntries(
+      entries,
+      "search",
+      "https://docs.example.com"
+    );
+
+    expect(ranked).toHaveLength(1);
+    expect(ranked[0]?.outputPath).toBe("search");
   });
 
   it("ignores generic stopwords", () => {
@@ -191,7 +257,7 @@ Deploy Sourcey output to any static host.
     expect(docs[0]?.metadata.source).toBe(
       "https://docs.example.com/reference/search.html"
     );
-    expect(docs[0]?.metadata.path).toBe("search.html");
+    expect(docs[0]?.metadata.path).toBe("search");
   });
 
   it("falls back to html when llms-full.txt is missing", async () => {

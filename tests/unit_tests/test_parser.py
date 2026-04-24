@@ -27,9 +27,16 @@ Returns indexed results.
 
     pages = parse_llms_full_text(payload)
 
-    assert set(pages) == {"guides/search.html", "api/index.html"}
-    assert "This heading belongs to the page content" in pages["guides/search.html"].content
-    assert pages["api/index.html"].title == "API Reference"
+    assert set(pages) == {"guides/search", "api"}
+    assert "This heading belongs to the page content" in pages["guides/search"].content
+    assert pages["api"].title == "API Reference"
+
+
+def test_parse_llms_full_text_canonicalises_pretty_url_paths() -> None:
+    for path in ("guides/search.html", "/guides/search/", "/guides/search"):
+        payload = f"### Search\n\nPath: `{path}`\n\nbody line\n".strip()
+        pages = parse_llms_full_text(payload)
+        assert set(pages) == {"guides/search"}, f"failed for {path!r}"
 
 
 def test_extract_text_from_html_strips_tags_and_scripts() -> None:

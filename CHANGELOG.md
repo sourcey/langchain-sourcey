@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.6 - 2026-04-24
+
+- supported Sourcey `prettyUrls` builds by canonicalising page paths across `.html`, trailing-slash, and extensionless URL styles so `search-index.json` and `llms-full.txt` entries still line up
+- bumped the JS package to 0.1.3 with the same change
+
+## 0.1.5 - 2026-04-24
+
+- tightened package and submission docs copy around the concrete Sourcey output contract
+- aligned the GitHub repo, LangChain docs PR, and package docs language
+
 ## 0.1.4 - 2026-04-24
 
 - reframed the package around implementing Ask AI over published Sourcey docs

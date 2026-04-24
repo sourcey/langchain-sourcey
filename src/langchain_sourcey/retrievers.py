@@ -92,7 +92,7 @@ class SourceyRetriever(BaseRetriever):
     top_k: int = Field(default=6, gt=0)
     timeout: float = Field(default=10.0, gt=0)
     use_llms_full: bool = True
-    user_agent: str = "langchain-sourcey/0.1.4"
+    user_agent: str = "langchain-sourcey/0.1.6"
     headers: dict[str, str] = Field(default_factory=dict)
     transport: httpx.BaseTransport | None = Field(default=None, exclude=True, repr=False)
 
@@ -395,10 +395,32 @@ def relative_output_path(url: str, site_url: str) -> str:
 
 
 def normalize_output_path(path: str) -> str:
-    path = path.split("#", 1)[0].strip()
-    if "://" in path:
-        path = urlparse(path).path
-    return path.lstrip("/")
+    """Canonicalise a page path across Sourcey's URL styles.
+
+    Collapses ``foo.html``, ``foo/``, ``foo``, and ``foo/index.html`` onto the
+    same key so ``search-index.json`` and ``llms-full.txt`` line up even when
+    the site is built with ``prettyUrls`` enabled.
+    """
+
+    value = path.split("#", 1)[0].strip()
+    if "://" in value:
+        value = urlparse(value).path
+
+    value = value.strip("/")
+    if not value:
+        return ""
+
+    if value.endswith(".html"):
+        value = value[:-5]
+    elif value.endswith(".htm"):
+        value = value[:-4]
+
+    if value == "index":
+        return ""
+    if value.endswith("/index"):
+        value = value[:-len("/index")]
+
+    return value
 
 
 def tokenize(text: str) -> list[str]:

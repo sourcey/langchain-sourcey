@@ -177,7 +177,7 @@ export class SourceyRetriever extends BaseRetriever<SourceyDocumentMetadata> {
     this.topK = fields.topK ?? 6;
     this.timeoutMs = fields.timeoutMs ?? 10_000;
     this.useLlmsFull = fields.useLlmsFull ?? true;
-    this.userAgent = fields.userAgent ?? "langchain-sourcey-js/0.1.1";
+    this.userAgent = fields.userAgent ?? "langchain-sourcey-js/0.1.3";
     this.headers = fields.headers ?? {};
     this.fetchImpl = fields.fetch ?? globalThis.fetch;
 
@@ -550,17 +550,32 @@ export function relativeOutputPath(url: string, siteUrl: string): string {
   return normalizeOutputPath(parsedPath);
 }
 
+/**
+ * Canonicalise a page path into a single form that matches across all Sourcey
+ * URL styles: `.html`, trailing-slash (`/foo/`), and extensionless (`/foo`).
+ * Same page keys to the same value regardless of which form the site emits,
+ * so `search-index.json` and `llms-full.txt` line up even in pretty-URL mode.
+ */
 function normalizeOutputPath(path: string): string {
-  const value = path.split("#", 1)[0]?.trim() ?? "";
-  if (!value) {
-    return "";
-  }
+  let value = path.split("#", 1)[0]?.trim() ?? "";
+  if (!value) return "";
 
   try {
-    return new URL(value).pathname.replace(/^\/+/, "");
+    value = new URL(value).pathname;
   } catch {
-    return value.replace(/^\/+/, "");
+    // Not an absolute URL; treat input as a bare path.
   }
+
+  value = value.replace(/^\/+/, "").replace(/\/+$/, "");
+  if (!value) return "";
+
+  if (value.endsWith(".html")) value = value.slice(0, -5);
+  else if (value.endsWith(".htm")) value = value.slice(0, -4);
+
+  if (value === "index") return "";
+  if (value.endsWith("/index")) value = value.slice(0, -"/index".length);
+
+  return value;
 }
 
 function tokenize(text: string): string[] {

@@ -34,8 +34,21 @@ def test_rank_search_entries_prefers_title_and_deduplicates_page() -> None:
     ranked = rank_search_entries(entries, "search", "https://docs.example.com/reference")
 
     assert len(ranked) == 1
-    assert ranked[0].output_path == "search.html"
+    assert ranked[0].output_path == "search"
     assert ranked[0].source_url == "https://docs.example.com/reference/search.html"
+
+
+def test_rank_search_entries_dedupes_across_url_styles() -> None:
+    entries = [
+        SearchEntry(title="Search", content="one", url="/search.html", tab="Docs", category="Pages"),
+        SearchEntry(title="Search", content="two", url="/search/", tab="Docs", category="Pages"),
+        SearchEntry(title="Search", content="three", url="/search", tab="Docs", category="Pages"),
+    ]
+
+    ranked = rank_search_entries(entries, "search", "https://docs.example.com")
+
+    assert len(ranked) == 1
+    assert ranked[0].output_path == "search"
 
 
 def test_retriever_hydrates_from_llms_full() -> None:
@@ -98,7 +111,7 @@ Deploy Sourcey output to any static host.
     assert len(docs) == 1
     assert "dialog ranks results" in docs[0].page_content
     assert docs[0].metadata["source"] == "https://docs.example.com/reference/search.html"
-    assert docs[0].metadata["path"] == "search.html"
+    assert docs[0].metadata["path"] == "search"
 
 
 def test_retriever_falls_back_to_html_when_llms_full_missing() -> None:
