@@ -1,28 +1,20 @@
 # langchain-sourcey
 
 [![PyPI - Version](https://img.shields.io/pypi/v/langchain-sourcey?label=%20)](https://pypi.org/project/langchain-sourcey/)
-[![PyPI - Downloads](https://img.shields.io/pepy/dt/langchain-sourcey)](https://pypistats.org/packages/langchain-sourcey)
 [![PyPI - License](https://img.shields.io/pypi/l/langchain-sourcey)](https://pypi.org/project/langchain-sourcey/)
 [![CI](https://github.com/sourcey/langchain-sourcey/actions/workflows/ci.yml/badge.svg)](https://github.com/sourcey/langchain-sourcey/actions/workflows/ci.yml)
 
-`langchain-sourcey` is the native LangChain retriever for Sourcey-generated
-documentation sites.
+> Your docs retriever should not depend on somebody else's SaaS either.
 
-It turns a published Sourcey docs root into a LangChain knowledge source
-without a private indexing service or ingestion pipeline. The retriever works
-directly against Sourcey's public artefacts:
+`langchain-sourcey` reads a published Sourcey docs site directly.
+
+Sourcey already ships the files a retriever needs. This package uses them:
 
 - `search-index.json` for candidate discovery
 - `llms-full.txt` for full-page hydration
 - canonical page URLs for citations
 
-## Why this integration is a good LangChain fit
-
-- No credentials required for public docs sites
-- Retrieval works against static hosting, subpath deployments, and GitHub Pages
-- Returned `Document` objects carry canonical `metadata["source"]` URLs
-- `llms-full.txt` gives cleaner full-page content than scraping rendered HTML
-- If `llms-full.txt` is missing, the retriever falls back to page HTML
+If `llms-full.txt` is missing, it falls back to the matched page HTML.
 
 ## Install
 
@@ -30,8 +22,11 @@ directly against Sourcey's public artefacts:
 pip install -U langchain-sourcey
 ```
 
-Point `site_url` at the root of a published Sourcey build, for example
-`https://sourcey.com/docs` or `https://sourcey.com/cheesestore`.
+Point `site_url` at the root of a published Sourcey build:
+
+- `https://sourcey.com/docs`
+- `https://sourcey.com/cheesestore`
+- `https://cheesestore.github.io`
 
 ## Quickstart
 
@@ -53,6 +48,8 @@ for doc in docs:
 ```
 
 For a runnable script, see [examples/live_quickstart.py](examples/live_quickstart.py).
+
+Sourcey guide: `https://sourcey.com/docs/guides/guide-langchain-retriever.html`
 
 ## Use In A LangChain Chain
 
@@ -93,17 +90,16 @@ print(answer)
 
 For a fuller example, see [examples/rag_chain.py](examples/rag_chain.py).
 
-## Sourcey Site Contract
+## Sourcey Contract
 
-For best results, the published Sourcey site should:
+This package assumes the published Sourcey site exposes:
 
 - publish `search-index.json`
 - publish `llms-full.txt`
 - set `siteUrl` in `sourcey.config.ts` so citations are canonical
 
 `search-index.json` is required. `llms-full.txt` is strongly recommended because
-it lets the retriever return full page content instead of HTML-derived fallback
-text.
+it gives the retriever full page content instead of HTML-derived fallback text.
 
 ## Returned Metadata
 
@@ -141,6 +137,4 @@ This repo includes draft docs ready to turn into a LangChain docs PR:
 
 ## Scope
 
-This package intentionally ships `SourceyRetriever` only. A document loader is
-deferred until the retriever proves enough demand to justify the maintenance
-surface.
+This package ships `SourceyRetriever` only. No loader yet.

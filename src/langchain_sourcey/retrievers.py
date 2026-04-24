@@ -92,7 +92,7 @@ class SourceyRetriever(BaseRetriever):
     top_k: int = Field(default=6, gt=0)
     timeout: float = Field(default=10.0, gt=0)
     use_llms_full: bool = True
-    user_agent: str = "langchain-sourcey/0.1.2"
+    user_agent: str = "langchain-sourcey/0.1.3"
     headers: dict[str, str] = Field(default_factory=dict)
     transport: httpx.BaseTransport | None = Field(default=None, exclude=True, repr=False)
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "langchain-sourcey"
-version = "0.1.2"
+version = "0.1.3"
 description = "Native LangChain retriever for Sourcey-generated documentation sites."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -35,7 +35,7 @@ dev = [
 
 [project.urls]
 Homepage = "https://sourcey.com"
-Documentation = "https://github.com/sourcey/langchain-sourcey#readme"
+Documentation = "https://sourcey.com/docs/guides/guide-langchain-retriever.html"
 Repository = "https://github.com/sourcey/langchain-sourcey"
 Issues = "https://github.com/sourcey/langchain-sourcey/issues"
 Changelog = "https://github.com/sourcey/langchain-sourcey/blob/main/CHANGELOG.md"

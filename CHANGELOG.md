@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3 - 2026-04-24
+
+- pointed package documentation at a dedicated Sourcey docs guide
+- tightened package copy and removed the download badge
+
 ## 0.1.2 - 2026-04-24
 
 - improved the package README and added runnable example scripts
