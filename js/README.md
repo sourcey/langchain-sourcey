@@ -1,8 +1,9 @@
 # langchain-sourcey
 
-Build your own Ask AI on top of a published Sourcey docs site.
+Implement Ask AI over a published Sourcey docs site.
 
-`langchain-sourcey` is the retrieval layer behind that feature.
+`langchain-sourcey` reads Sourcey's generated search and LLM artefacts and
+returns canonical page URLs for citation.
 
 Sourcey already emits the files a retriever needs:
 
@@ -54,7 +55,7 @@ for (const doc of docs) {
 
 For a runnable script, see [examples/live-quickstart.ts](examples/live-quickstart.ts).
 
-More context: `https://sourcey.com/docs/guides/guide-langchain-retriever`
+More context: [Sourcey guide](https://sourcey.com/docs/guides/guide-langchain-retriever)
 
 ## Implement Ask AI
 
@@ -119,9 +120,9 @@ console.log(answer);
 
 For a fuller example, see [examples/rag-chain.ts](examples/rag-chain.ts).
 
-## What Has To Exist
+## Sourcey Output Contract
 
-For clean retrieval, the published Sourcey site should expose:
+For predictable retrieval, the published Sourcey site should expose:
 
 - publish `search-index.json`
 - publish `llms-full.txt`

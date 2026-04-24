@@ -4,9 +4,10 @@
 [![PyPI - License](https://img.shields.io/pypi/l/langchain-sourcey)](https://pypi.org/project/langchain-sourcey/)
 [![CI](https://github.com/sourcey/langchain-sourcey/actions/workflows/ci.yml/badge.svg)](https://github.com/sourcey/langchain-sourcey/actions/workflows/ci.yml)
 
-Build your own Ask AI on top of a published Sourcey docs site.
+Implement Ask AI over a published Sourcey docs site.
 
-`langchain-sourcey` is the retrieval layer behind that feature.
+`langchain-sourcey` reads Sourcey's generated search and LLM artefacts and
+returns canonical page URLs for citation.
 
 Sourcey already emits the files a retriever needs:
 
@@ -49,7 +50,7 @@ for doc in docs:
 
 For a runnable script, see [examples/live_quickstart.py](examples/live_quickstart.py).
 
-More context: `https://sourcey.com/docs/guides/guide-langchain-retriever`
+More context: [Sourcey guide](https://sourcey.com/docs/guides/guide-langchain-retriever)
 
 ## Implement Ask AI
 
@@ -90,9 +91,9 @@ print(answer)
 
 For a fuller example, see [examples/rag_chain.py](examples/rag_chain.py).
 
-## What Has To Exist
+## Sourcey Output Contract
 
-For clean retrieval, the published Sourcey site should expose:
+For predictable retrieval, the published Sourcey site should expose:
 
 - publish `search-index.json`
 - publish `llms-full.txt`
