@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "langchain-sourcey"
+version = "0.1.2"
+description = "Native LangChain retriever for Sourcey-generated documentation sites."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+  { name = "Kam Low" },
+]
+dependencies = [
+  "httpx>=0.28,<1.0",
+  "langchain-core>=1.0,<2.0",
+]
+keywords = ["langchain", "retriever", "sourcey", "rag", "documentation"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU Affero General Public License v3",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=9,<10",
+]
+
+[project.urls]
+Homepage = "https://sourcey.com"
+Documentation = "https://github.com/sourcey/langchain-sourcey#readme"
+Repository = "https://github.com/sourcey/langchain-sourcey"
+Issues = "https://github.com/sourcey/langchain-sourcey/issues"
+Changelog = "https://github.com/sourcey/langchain-sourcey/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/langchain_sourcey"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+  "integration: tests that hit a live published Sourcey site",
+]
