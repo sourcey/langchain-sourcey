@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  python:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -43,3 +43,42 @@ jobs:
 
       - name: Check package metadata
         run: python -m twine check dist/*
+
+  javascript:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - "20"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: js/package-lock.json
+
+      - name: Install JS dependencies
+        working-directory: js
+        run: npm ci
+
+      - name: Run JS type checks
+        working-directory: js
+        run: npm run check
+
+      - name: Run JS tests
+        working-directory: js
+        run: npm run test
+
+      - name: Run JS live integration test
+        working-directory: js
+        run: SOURCEY_TEST_SITE_URL=https://sourcey.com/docs npm run test
+
+      - name: Build JS package
+        working-directory: js
+        run: npm run build
