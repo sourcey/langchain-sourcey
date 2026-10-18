@@ -1,6 +1,15 @@
 from langchain_sourcey.retrievers import extract_text_from_html, parse_llms_full_text
 
 
+def test_readable_context_keeps_page_metadata_inside_examples() -> None:
+    for fence in ("```", "~~~~", "````"):
+        text = f"### Guide\n\nPath: `guide.html`\n\n# Guide\n\n{fence}markdown\n### Literal example\n\nPath: `not-a-page.html`\n\nKeep this code.\n{fence}\n\n### Next\n\nPath: `next.html`\n\nNext page."
+        pages = parse_llms_full_text(text)
+        assert set(pages) == {"guide", "next"}
+        assert "Path: `not-a-page.html`" in pages["guide"].content
+        assert "Keep this code." in pages["guide"].content
+
+
 def test_parse_llms_full_text_extracts_pages_by_path() -> None:
     payload = """
 # Example Docs

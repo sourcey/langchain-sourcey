@@ -92,7 +92,7 @@ class SourceyRetriever(BaseRetriever):
     top_k: int = Field(default=6, gt=0)
     timeout: float = Field(default=10.0, gt=0)
     use_llms_full: bool = True
-    user_agent: str = "langchain-sourcey/0.1.6"
+    user_agent: str = "langchain-sourcey/0.1.7"
     headers: dict[str, str] = Field(default_factory=dict)
     transport: httpx.BaseTransport | None = Field(default=None, exclude=True, repr=False)
 
@@ -350,8 +350,20 @@ def parse_llms_full_text(text: str) -> dict[str, ParsedPage]:
             body_start += 1
 
         body_end = body_start
+        fence: tuple[str, int] | None = None
         while body_end < len(lines):
-            if lines[body_end].startswith("### "):
+            fence_match = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", lines[body_end])
+            if fence is not None:
+                if (
+                    fence_match
+                    and fence_match[1][0] == fence[0]
+                    and len(fence_match[1]) >= fence[1]
+                    and not fence_match[2].strip()
+                ):
+                    fence = None
+            elif fence_match:
+                fence = (fence_match[1][0], len(fence_match[1]))
+            elif lines[body_end].startswith("### "):
                 probe = body_end + 1
                 while probe < len(lines) and not lines[probe].strip():
                     probe += 1

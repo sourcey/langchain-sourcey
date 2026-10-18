@@ -177,7 +177,7 @@ export class SourceyRetriever extends BaseRetriever<SourceyDocumentMetadata> {
     this.topK = fields.topK ?? 6;
     this.timeoutMs = fields.timeoutMs ?? 10_000;
     this.useLlmsFull = fields.useLlmsFull ?? true;
-    this.userAgent = fields.userAgent ?? "langchain-sourcey-js/0.1.3";
+    this.userAgent = fields.userAgent ?? "langchain-sourcey-js/0.1.4";
     this.headers = fields.headers ?? {};
     this.fetchImpl = fields.fetch ?? globalThis.fetch;
 
@@ -498,9 +498,20 @@ export function parseLlmsFullText(text: string): Record<string, ParsedPage> {
     }
 
     let bodyEnd = bodyStart;
+    let fence: { char: string; length: number } | undefined;
     while (bodyEnd < lines.length) {
       const bodyLine = lines[bodyEnd] ?? "";
-      if (bodyLine.startsWith("### ")) {
+      const matchFence = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(bodyLine);
+      if (fence) {
+        if (
+          matchFence &&
+          matchFence[1]![0] === fence.char &&
+          matchFence[1]!.length >= fence.length &&
+          !matchFence[2]?.trim()
+        ) fence = undefined;
+      } else if (matchFence) {
+        fence = { char: matchFence[1]![0]!, length: matchFence[1]!.length };
+      } else if (bodyLine.startsWith("### ")) {
         let probe = bodyEnd + 1;
         while (probe < lines.length && !lines[probe]?.trim()) {
           probe += 1;
