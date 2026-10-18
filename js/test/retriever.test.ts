@@ -10,6 +10,15 @@ import {
 } from "../src/retriever.js";
 
 describe("parseLlmsFullText", () => {
+  it("keeps page-looking metadata inside fenced examples in readable context exports", () => {
+    for (const fence of ["```", "~~~~", "````"]) {
+      const payload = `### Guide\n\nPath: \`guide.html\`\n\n# Guide\n\n${fence}markdown\n### Literal example\n\nPath: \`not-a-page.html\`\n\nKeep this code.\n${fence}\n\n### Next\n\nPath: \`next.html\`\n\nNext page.`;
+      const pages = parseLlmsFullText(payload);
+      expect(Object.keys(pages)).toEqual(["guide", "next"]);
+      expect(pages.guide?.content).toContain("Path: `not-a-page.html`");
+      expect(pages.guide?.content).toContain("Keep this code.");
+    }
+  });
   it("extracts pages by path", () => {
     const payload = `
 # Example Docs

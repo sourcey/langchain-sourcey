@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.7 - 2026-10-18
+
+- preserve page-looking headings and `Path:` metadata inside fenced documentation examples, including Sourcey 3.7.1 readable exports
+- release the same parser correction as JavaScript 0.1.4
+
 ## 0.1.6 - 2026-04-24
 
 - supported Sourcey `prettyUrls` builds by canonicalising page paths across `.html`, trailing-slash, and extensionless URL styles so `search-index.json` and `llms-full.txt` entries still line up
