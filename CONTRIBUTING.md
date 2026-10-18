@@ -65,5 +65,7 @@ SOURCEY_TEST_SITE_URL=https://sourcey.com/docs npm run test
   URLs resolve before publishing.
 - Keep `js/package.json` and `js/src/retriever.ts` on the same package version
   so the JS `User-Agent` stays accurate.
-- Publish the JS package from `js/` only after `npm run check`, `npm run test`,
-  the live JS test, and `npm run build` pass.
+- Publish the JS package by pushing the tag `js/vX.Y.Z`.
+  `.github/workflows/release-npm.yml` runs `npm run check`, `npm run test`, the
+  live JS test and `npm run build`, then publishes through npm trusted
+  publishing.
